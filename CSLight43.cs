@@ -7,7 +7,7 @@ namespace CSLight43
     {
         static void Main(string[] args)
         {
-            Database playersDataBase = new Database();
+            Database playersDatabase = new Database();
 
             bool isRunning = true;
 
@@ -15,7 +15,7 @@ namespace CSLight43
             {
                 Console.WriteLine("Добро пожаловать на сервер.\n" +
                     "Игроки в базе даннных:\n");
-                playersDataBase.ShowDataBase();
+                playersDatabase.ShowDatabase();
 
                 Console.WriteLine("\n1: Добавить игрока.\n" +
                     "2: Забанить игрока.\n" +
@@ -28,16 +28,16 @@ namespace CSLight43
                 switch (userInput)
                 {
                     case "1":
-                        playersDataBase.AddPlayer();
+                        playersDatabase.AddPlayer();
                         break;
                     case "2":
-                        playersDataBase.BanPlayer();
+                        playersDatabase.BanPlayer();
                         break;
                     case "3":
-                        playersDataBase.UnbanPlayer();
+                        playersDatabase.UnbanPlayer();
                         break;
                     case "4":
-                        playersDataBase.DeletePlayer();
+                        playersDatabase.DeletePlayer();
                         break;
                     case "5":
                         Console.WriteLine("Закрытие программы...");
@@ -58,7 +58,7 @@ namespace CSLight43
     {
         private List<Player> _players = new List<Player>();
 
-        public void ShowDataBase()
+        public void ShowDatabase()
         {
             foreach (var player in _players)
             {
