@@ -7,7 +7,7 @@ namespace CSLight43
     {
         static void Main(string[] args)
         {
-            DataBase playersDataBase = new DataBase();
+            Database playersDataBase = new Database();
 
             bool isRunning = true;
 
@@ -54,13 +54,13 @@ namespace CSLight43
         }
     }
 
-    class DataBase
+    class Database
     {
-        public List<Player> PlayersDataBase = new List<Player>();
+        private List<Player> _players = new List<Player>();
 
         public void ShowDataBase()
         {
-            foreach (var player in PlayersDataBase)
+            foreach (var player in _players)
             {
                 player.ShowInfo();
             }
@@ -69,17 +69,17 @@ namespace CSLight43
         public void AddPlayer ()
         {
             Console.Write("Введите никнейм игрока: ");
-            string playersNickname = Console.ReadLine();
+            string nickname = Console.ReadLine();
 
             Console.Write("Введите уровень игрока: ");
-            bool isCorrect = int.TryParse(Console.ReadLine(), out int playersLevel);
+            bool isCorrect = int.TryParse(Console.ReadLine(), out int level);
 
             if (isCorrect)
             {
-                if (playersLevel > 0)
+                if (level > 0)
                 {
                     Console.WriteLine("\nИгрок добавлен.");
-                    PlayersDataBase.Add(new Player(playersNickname, playersLevel));
+                    _players.Add(new Player(nickname, level));
                 }
                 else
                 {
@@ -94,23 +94,22 @@ namespace CSLight43
 
         public void BanPlayer()
         {
-            if (PlayersDataBase.Count > 0)
+            if (_players.Count > 0)
             {
-                Console.Write("Введите уникальный номер игрока: ");
-                bool isCorrect = int.TryParse(Console.ReadLine(), out int playersID);
+                int ID = GetPlayerID();
 
-                if (isCorrect)
+                if (ID > 0)
                 {
-                    if (playersID > 0 && playersID <= PlayersDataBase.Count)
+                    if (ID <= _players.Count)
                     {
-                        if (PlayersDataBase[playersID - 1].IsBanned)
+                        if (_players[ID - 1].IsBanned)
                         {
                             Console.WriteLine("\nИгрок уже забанен.");
                         }
                         else
                         {
                             Console.WriteLine("\nИгрок забанен.");
-                            PlayersDataBase[playersID - 1].Ban();
+                            _players[ID - 1].Ban();
                         }
                     }
                     else
@@ -131,23 +130,22 @@ namespace CSLight43
 
         public void UnbanPlayer()
         {
-            if (PlayersDataBase.Count > 0)
+            if (_players.Count > 0)
             {
-                Console.Write("Введите уникальный номер игрока: ");
-                bool isCorrect = int.TryParse(Console.ReadLine(), out int playersID);
+                int ID = GetPlayerID();
 
-                if (isCorrect)
+                if (ID > 0)
                 {
-                    if (playersID > 0 && playersID <= PlayersDataBase.Count)
+                    if (ID <= _players.Count)
                     {
-                        if (!PlayersDataBase[playersID - 1].IsBanned)
+                        if (!_players[ID - 1].IsBanned)
                         {
                             Console.WriteLine("\nИгрок не забанен.");
                         }
                         else
                         {
                             Console.WriteLine("\nИгрок разбанен.");
-                            PlayersDataBase[playersID - 1].Unban();
+                            _players[ID - 1].Unban();
                         }
                     }
                     else
@@ -168,17 +166,16 @@ namespace CSLight43
 
         public void DeletePlayer()
         {
-            if (PlayersDataBase.Count > 0)
+            if (_players.Count > 0)
             {
-                Console.Write("Введите уникальный номер игрока: ");
-                bool isCorrect = int.TryParse(Console.ReadLine(), out int playersID);
+                int ID = GetPlayerID();
 
-                if (isCorrect)
+                if (ID > 0)
                 {
-                    if (playersID > 0 && playersID <= PlayersDataBase.Count)
+                    if (ID <= _players.Count)
                     {
                         Console.WriteLine("\nИгрок удален.");
-                        PlayersDataBase.RemoveAt(playersID - 1);
+                        _players.RemoveAt(ID - 1);
                     }
                     else
                     {
@@ -195,15 +192,31 @@ namespace CSLight43
                 Console.WriteLine("В базе данных пока нет игроков.");
             }
         }
+
+        private int GetPlayerID ()
+        {
+            Console.Write("Введите уникальный номер игрока: ");
+            bool isCorrect = int.TryParse(Console.ReadLine(), out int ID);
+
+            if (isCorrect)
+            {
+                return ID;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 
     class Player
     {
         public static int IDs;
-        public bool IsBanned { get; private set; }
         private int _ID;
         private string _nickname;
         private int _level;
+        public bool IsBanned { get; private set; }
+
 
         public Player(string nickname, int level, bool isBanned = false)
         {
