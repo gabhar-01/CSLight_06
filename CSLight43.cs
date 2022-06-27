@@ -74,17 +74,10 @@ namespace CSLight43
             Console.Write("Введите уровень игрока: ");
             bool isCorrect = int.TryParse(Console.ReadLine(), out int level);
 
-            if (isCorrect)
+            if (isCorrect && level > 0)
             {
-                if (level > 0)
-                {
-                    Console.WriteLine("\nИгрок добавлен.");
-                    _players.Add(new Player(nickname, level));
-                }
-                else
-                {
-                    Console.WriteLine("\nВведены некорректные данные уровня игрока. Игрок не будет добавлен.");
-                }
+                Console.WriteLine("\nИгрок добавлен.");
+                _players.Add(new Player(nickname, level));
             }
             else
             {
@@ -94,22 +87,64 @@ namespace CSLight43
 
         public void BanPlayer()
         {
+            GetPlayer("Ban");
+        }
+
+        public void UnbanPlayer()
+        {
+            GetPlayer("Unban");
+        }
+
+        public void DeletePlayer()
+        {
+            GetPlayer("Delete");
+        }
+
+        private void GetPlayer (string command)
+        {
             if (_players.Count > 0)
             {
-                int ID = GetPlayerID();
+                Console.Write("Введите уникальный номер игрока: ");
+                bool isCorrect = int.TryParse(Console.ReadLine(), out int ID);
 
-                if (ID > 0)
+                if (isCorrect)
                 {
-                    if (ID <= _players.Count)
+                    if (ID > 0 && ID <= _players.Count)
                     {
-                        if (_players[ID - 1].IsBanned)
+                        switch (command)
                         {
-                            Console.WriteLine("\nИгрок уже забанен.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nИгрок забанен.");
-                            _players[ID - 1].Ban();
+                            case "Ban":
+
+                                if (_players[ID - 1].IsBanned)
+                                {
+                                    Console.WriteLine("\nИгрок уже забанен.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nИгрок забанен.");
+                                    _players[ID - 1].Ban();
+                                }
+
+                                break;
+                            case "Unban":
+
+                                if (!_players[ID - 1].IsBanned)
+                                {
+                                    Console.WriteLine("\nИгрок не забанен.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nИгрок разбанен.");
+                                    _players[ID - 1].Unban();
+                                }
+
+                                break;
+                            case "Delete":
+
+                                Console.WriteLine("\nИгрок удален.");
+                                _players.RemoveAt(ID - 1);
+
+                                break;
                         }
                     }
                     else
@@ -119,92 +154,12 @@ namespace CSLight43
                 }
                 else
                 {
-                    Console.WriteLine("\nВведены некорректные данные уникального номера игрока. Игрок не будет забанен.");
+                    Console.WriteLine("\nВведены некорректные данные уникального номера игрока.");
                 }
             }
             else
             {
                 Console.WriteLine("В базе данных пока нет игроков.");
-            }
-        }
-
-        public void UnbanPlayer()
-        {
-            if (_players.Count > 0)
-            {
-                int ID = GetPlayerID();
-
-                if (ID > 0)
-                {
-                    if (ID <= _players.Count)
-                    {
-                        if (!_players[ID - 1].IsBanned)
-                        {
-                            Console.WriteLine("\nИгрок не забанен.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nИгрок разбанен.");
-                            _players[ID - 1].Unban();
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nТакого номера игрока не существует.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nВведены некорректные данные уникального номера игрока. Игрок не будет разбанен.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("В базе данных пока нет игроков.");
-            }
-        }
-
-        public void DeletePlayer()
-        {
-            if (_players.Count > 0)
-            {
-                int ID = GetPlayerID();
-
-                if (ID > 0)
-                {
-                    if (ID <= _players.Count)
-                    {
-                        Console.WriteLine("\nИгрок удален.");
-                        _players.RemoveAt(ID - 1);
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nТакого номера игрока не существует.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nВведены некорректные данные уникального номера игрока. Игрок не будет удален.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("В базе данных пока нет игроков.");
-            }
-        }
-
-        private int GetPlayerID ()
-        {
-            Console.Write("Введите уникальный номер игрока: ");
-            bool isCorrect = int.TryParse(Console.ReadLine(), out int ID);
-
-            if (isCorrect)
-            {
-                return ID;
-            }
-            else
-            {
-                return 0;
             }
         }
     }
